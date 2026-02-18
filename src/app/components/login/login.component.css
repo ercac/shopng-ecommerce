@@ -1,0 +1,186 @@
+/* ============================================================ */
+/* LOGIN PAGE STYLES                                             */
+/* Centered auth card with form inputs and validation feedback   */
+/* ============================================================ */
+
+/* ── Page Layout ─────────────────────────────────────────── */
+
+.auth-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 120px);
+  padding: 2rem 1rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  padding: 2.5rem;
+  animation: fadeInUp 0.4s ease;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 1.75rem;
+  color: var(--text-dark, #1d3557);
+}
+
+.auth-header p {
+  margin: 0;
+  color: var(--text-muted, #6c757d);
+  font-size: 0.95rem;
+}
+
+/* ── Error Message ───────────────────────────────────────── */
+
+.auth-error {
+  background: #fef2f2;
+  color: #dc2626;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid #fecaca;
+  text-align: center;
+}
+
+/* ── Form Fields ─────────────────────────────────────────── */
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-dark, #1d3557);
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  background: #fafafa;
+}
+
+.form-group input:focus {
+  border-color: var(--primary, #2B3D5A);
+  box-shadow: 0 0 0 3px rgba(43, 61, 90, 0.1);
+  background: white;
+}
+
+.form-group input.ng-invalid.ng-touched {
+  border-color: var(--danger, #e63946);
+}
+
+.form-group input.ng-valid.ng-touched {
+  border-color: var(--success, #81b29a);
+}
+
+.error {
+  display: block;
+  color: var(--danger, #e63946);
+  font-size: 0.8rem;
+  margin-top: 0.3rem;
+}
+
+/* ── Submit Button ───────────────────────────────────────── */
+
+.btn-auth {
+  width: 100%;
+  padding: 0.85rem;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary, #2B3D5A);
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.btn-auth:hover:not(:disabled) {
+  background: var(--primary-light, #3d5a80);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(43, 61, 90, 0.3);
+}
+
+.btn-auth:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+/* ── Footer Link ─────────────────────────────────────────── */
+
+.auth-footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #f0f0f0;
+}
+
+.auth-footer p {
+  margin: 0;
+  color: var(--text-muted, #6c757d);
+  font-size: 0.9rem;
+}
+
+.auth-footer a {
+  color: var(--primary, #2B3D5A);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.auth-footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── Demo Credentials ────────────────────────────────────── */
+
+.demo-credentials {
+  margin-top: 1.25rem;
+  padding: 0.75rem 1rem;
+  background: #f0f9ff;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  color: #1e40af;
+  border: 1px solid #bfdbfe;
+  line-height: 1.6;
+}
+
+.demo-credentials strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+/* ── Animation ───────────────────────────────────────────── */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

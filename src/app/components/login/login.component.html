@@ -1,0 +1,93 @@
+<!-- ============================================================ -->
+<!-- LOGIN PAGE TEMPLATE                                          -->
+<!-- ANGULAR CONCEPTS:                                            -->
+<!--   [formGroup]      — Bind form to our FormGroup              -->
+<!--   formControlName  — Bind input to a FormControl             -->
+<!--   (ngSubmit)       — Handle form submission                  -->
+<!--   @if              — Conditional rendering (Angular 17)      -->
+<!--   routerLink       — Navigate to register page               -->
+<!-- ============================================================ -->
+
+<div class="auth-page">
+  <div class="auth-card">
+    <!-- Header -->
+    <div class="auth-header">
+      <h1>Welcome Back</h1>
+      <p>Sign in to your ShopNG account</p>
+    </div>
+
+    <!-- Error Message from API -->
+    @if (errorMessage) {
+      <div class="auth-error">
+        {{ errorMessage }}
+      </div>
+    }
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email Field -->
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input
+          id="email"
+          formControlName="email"
+          type="email"
+          placeholder="you@example.com"
+          autocomplete="email"
+        />
+        @if (f['email'].touched && f['email'].errors) {
+          <span class="error">
+            @if (f['email'].errors['required']) { Email is required. }
+            @if (f['email'].errors['email']) { Please enter a valid email. }
+          </span>
+        }
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          formControlName="password"
+          type="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        @if (f['password'].touched && f['password'].errors) {
+          <span class="error">
+            @if (f['password'].errors['required']) { Password is required. }
+            @if (f['password'].errors['minlength']) { Minimum 6 characters. }
+          </span>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="btn-auth"
+        [disabled]="isLoading"
+      >
+        @if (isLoading) {
+          Signing in...
+        } @else {
+          Sign In
+        }
+      </button>
+    </form>
+
+    <!-- Link to Register Page -->
+    <div class="auth-footer">
+      <p>
+        Don't have an account?
+        <a routerLink="/register">Create one</a>
+      </p>
+    </div>
+
+    <!-- Demo Credentials Helper -->
+    <div class="demo-credentials">
+      <strong>Demo Accounts:</strong>
+      <div>Admin: admin&#64;shopng.com / admin123</div>
+      <div>User: user&#64;shopng.com / user123</div>
+    </div>
+  </div>
+</div>
