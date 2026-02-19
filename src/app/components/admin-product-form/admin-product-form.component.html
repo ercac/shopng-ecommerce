@@ -1,1 +1,150 @@
-<p>admin-product-form works!</p>
+<div class="product-form-page">
+  <div class="page-header">
+    <h1>{{ isEditMode ? 'Edit Product' : 'Create New Product' }}</h1>
+    <a routerLink="/admin/products" class="btn btn-secondary">← Back to Products</a>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  @if (loading) {
+    <div class="loading">Loading product...</div>
+  } @else {
+    <form class="product-form" (ngSubmit)="onSubmit()">
+      <div class="form-card">
+        <div class="form-section">
+          <h3>Basic Info</h3>
+
+          <div class="form-group">
+            <label for="name">Product Name *</label>
+            <input
+              id="name"
+              type="text"
+              [(ngModel)]="product.name"
+              name="name"
+              placeholder="e.g. Wireless Bluetooth Headphones"
+              required
+            />
+          </div>
+
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea
+              id="description"
+              [(ngModel)]="product.description"
+              name="description"
+              rows="4"
+              placeholder="Describe the product..."
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="price">Price ($) *</label>
+              <input
+                id="price"
+                type="number"
+                [(ngModel)]="product.price"
+                name="price"
+                step="0.01"
+                min="0"
+                placeholder="0.00"
+                required
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="stock">Stock Quantity</label>
+              <input
+                id="stock"
+                type="number"
+                [(ngModel)]="product.stock"
+                name="stock"
+                min="0"
+                placeholder="0"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-section">
+          <h3>Details</h3>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="category">Category</label>
+              <select id="category" [(ngModel)]="product.category" name="category">
+                <option value="">Select a category</option>
+                @for (cat of categories; track cat) {
+                  <option [value]="cat">{{ cat }}</option>
+                }
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="rating">Rating (0-5)</label>
+              <input
+                id="rating"
+                type="number"
+                [(ngModel)]="product.rating"
+                name="rating"
+                min="0"
+                max="5"
+                step="0.1"
+                placeholder="0"
+              />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="image">Image URL</label>
+            <input
+              id="image"
+              type="text"
+              [(ngModel)]="product.image"
+              name="image"
+              placeholder="https://example.com/image.jpg"
+            />
+          </div>
+
+          @if (product.image) {
+            <div class="image-preview">
+              <img [src]="product.image" alt="Product preview" />
+            </div>
+          }
+        </div>
+
+        <div class="form-section">
+          <h3>Visibility</h3>
+
+          <div class="form-group toggle-group">
+            <label class="toggle-label">
+              <input
+                type="checkbox"
+                [(ngModel)]="product.disabled"
+                name="disabled"
+                class="toggle-checkbox"
+              />
+              <span class="toggle-switch"></span>
+              <span class="toggle-text">
+                {{ product.disabled ? 'Product is hidden from storefront' : 'Product is visible on storefront' }}
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary" [disabled]="saving">
+          {{ saving ? 'Saving...' : (isEditMode ? 'Update Product' : 'Create Product') }}
+        </button>
+        <a routerLink="/admin/products" class="btn btn-secondary">Cancel</a>
+      </div>
+    </form>
+  }
+</div>

@@ -145,6 +145,53 @@
   line-height: 1.2;
 }
 
+/* ── Admin Link ──────────────────────────────────────────── */
+
+.admin-link {
+  color: var(--accent, #e07a5f) !important;
+  font-weight: 600 !important;
+}
+
+/* ── Auth Buttons ────────────────────────────────────────── */
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.auth-btn {
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+a.auth-btn {
+  background: var(--primary);
+  color: white !important;
+  border: none;
+}
+
+a.auth-btn:hover {
+  background: var(--primary-light);
+}
+
+.logout-btn {
+  background: none;
+  border: 1px solid var(--text-muted);
+  color: var(--text-muted);
+  font-family: inherit;
+}
+
+.logout-btn:hover {
+  border-color: var(--danger);
+  color: var(--danger);
+}
+
 /* ── Hamburger Menu (hidden on desktop) ───────────────────── */
 
 .hamburger {

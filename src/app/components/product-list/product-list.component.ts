@@ -57,13 +57,15 @@ export class ProductListComponent implements OnInit {
    */
   ngOnInit(): void {
     // Load all products from the service
-    this.productService.getProducts().subscribe(products => {
+    this.productService.getAllProducts().subscribe(products => {
       this.allProducts = products;
       this.filteredProducts = products;
     });
 
     // Load category names
-    this.categories = this.productService.getCategories();
+    this.productService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
 
     // Listen to URL query parameter changes
     // This fires when the navbar search redirects here with ?search=...

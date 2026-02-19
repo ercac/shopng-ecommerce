@@ -154,24 +154,6 @@
   text-decoration: underline;
 }
 
-/* ── Demo Credentials ────────────────────────────────────── */
-
-.demo-credentials {
-  margin-top: 1.25rem;
-  padding: 0.75rem 1rem;
-  background: #f0f9ff;
-  border-radius: 8px;
-  font-size: 0.8rem;
-  color: #1e40af;
-  border: 1px solid #bfdbfe;
-  line-height: 1.6;
-}
-
-.demo-credentials strong {
-  display: block;
-  margin-bottom: 0.25rem;
-}
-
 /* ── Animation ───────────────────────────────────────────── */
 
 @keyframes fadeInUp {

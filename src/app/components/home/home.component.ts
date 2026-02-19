@@ -43,7 +43,9 @@ export class HomeComponent implements OnInit {
     });
 
     // Get all category names
-    this.categories = this.productService.getCategories();
+    this.productService.getCategories().subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
   /** Handle add to cart from featured product cards */

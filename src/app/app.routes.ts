@@ -1,49 +1,46 @@
-// ============================================================
-// APP ROUTES — The URL-to-component mapping for the entire app
-// ============================================================
-// ANGULAR CONCEPT: Routing
-//
-// The Routes array tells Angular which component to display
-// for each URL. When the user navigates to '/products', Angular
-// renders ProductListComponent inside the <router-outlet>.
-//
-// Key patterns:
-// - Static routes:    { path: 'products', component: ... }
-// - Route parameters: { path: 'product/:id', component: ... }
-//   The `:id` part is a dynamic segment — it matches any value
-//   (e.g., /product/1, /product/42). The component can read it.
-// - Wildcard route:   { path: '**', redirectTo: '' }
-//   Catches any URL that doesn't match above routes and redirects.
-//   MUST be the LAST route in the array!
-// ============================================================
-
 import { Routes } from '@angular/router';
 
-// Import all page-level components
 import { HomeComponent } from './components/home/home.component';
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { ProductDetailComponent } from './components/product-detail/product-detail.component';
 import { CartComponent } from './components/cart/cart.component';
 import { CheckoutComponent } from './components/checkout/checkout.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
+import { AdminComponent } from './components/admin/admin.component';
+import { AdminDashboardComponent } from './components/admin-dashboard/admin-dashboard.component';
+import { AdminProductsComponent } from './components/admin-products/admin-products.component';
+import { AdminProductFormComponent } from './components/admin-product-form/admin-product-form.component';
+import { AdminOrdersComponent } from './components/admin-orders/admin-orders.component';
+import { AdminUsersComponent } from './components/admin-users/admin-users.component';
+import { authGuard } from './guards/auth.guard';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
-  // Home page — the default route (empty path)
+  // Public routes
   { path: '', component: HomeComponent },
-
-  // Product listing page — shows all products with filtering
   { path: 'products', component: ProductListComponent },
-
-  // Product detail page — `:id` is a route parameter
-  // Example URL: /product/5 → id = 5
   { path: 'product/:id', component: ProductDetailComponent },
-
-  // Shopping cart page
   { path: 'cart', component: CartComponent },
-
-  // Checkout page — form for placing orders
   { path: 'checkout', component: CheckoutComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+
+  // Admin routes — protected by auth + admin guards
+  {
+    path: 'admin',
+    component: AdminComponent,
+    canActivate: [authGuard, adminGuard],
+    children: [
+      { path: '', component: AdminDashboardComponent },
+      { path: 'products', component: AdminProductsComponent },
+      { path: 'products/new', component: AdminProductFormComponent },
+      { path: 'products/edit/:id', component: AdminProductFormComponent },
+      { path: 'orders', component: AdminOrdersComponent },
+      { path: 'users', component: AdminUsersComponent }
+    ]
+  },
 
   // Wildcard — catches all unknown URLs and redirects to home
-  // IMPORTANT: This must always be the LAST route!
   { path: '**', redirectTo: '' }
 ];

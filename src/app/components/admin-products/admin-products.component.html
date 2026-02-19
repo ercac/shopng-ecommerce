@@ -1,1 +1,89 @@
-<p>admin-products works!</p>
+<div class="admin-products">
+  <div class="page-header">
+    <h1>Product Listings</h1>
+    <a routerLink="/admin/products/new" class="btn btn-primary">+ Add New Product</a>
+  </div>
+
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+
+  <div class="toolbar">
+    <input
+      type="text"
+      class="search-input"
+      placeholder="Search by name or category..."
+      [(ngModel)]="searchTerm"
+      (input)="applyFilter()"
+    />
+    <span class="product-count">{{ filteredProducts.length }} product(s)</span>
+  </div>
+
+  @if (loading) {
+    <div class="loading">Loading products...</div>
+  } @else if (filteredProducts.length === 0) {
+    <div class="empty-state">
+      <p>No products found.</p>
+      <a routerLink="/admin/products/new" class="btn btn-primary">Create your first product</a>
+    </div>
+  } @else {
+    <div class="table-wrapper">
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Image</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Price</th>
+            <th>Stock</th>
+            <th>Rating</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (product of filteredProducts; track product.id) {
+            <tr [class.row-disabled]="product.disabled">
+              <td class="cell-id">{{ product.id }}</td>
+              <td class="cell-image">
+                <img [src]="product.image" [alt]="product.name" class="product-thumb" />
+              </td>
+              <td class="cell-name">{{ product.name }}</td>
+              <td><span class="category-badge">{{ product.category }}</span></td>
+              <td class="cell-price">{{ product.price | currency }}</td>
+              <td>
+                <span class="stock-badge" [class.low-stock]="product.stock < 5">
+                  {{ product.stock }}
+                </span>
+              </td>
+              <td>{{ product.rating }}/5</td>
+              <td>
+                <button
+                  class="btn-toggle"
+                  [class.btn-toggle-active]="!product.disabled"
+                  [class.btn-toggle-disabled]="product.disabled"
+                  (click)="toggleDisabled(product.id)"
+                >
+                  {{ product.disabled ? 'Disabled' : 'Active' }}
+                </button>
+              </td>
+              <td class="cell-actions">
+                @if (deleteConfirmId === product.id) {
+                  <div class="confirm-delete">
+                    <span>Delete?</span>
+                    <button class="btn btn-danger btn-sm" (click)="deleteProduct(product.id)">Yes</button>
+                    <button class="btn btn-secondary btn-sm" (click)="cancelDelete()">No</button>
+                  </div>
+                } @else {
+                  <a [routerLink]="['/admin/products/edit', product.id]" class="btn btn-secondary btn-sm">Edit</a>
+                  <button class="btn btn-danger btn-sm" (click)="confirmDelete(product.id)">Delete</button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</div>

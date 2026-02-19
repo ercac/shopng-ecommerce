@@ -1,14 +1,3 @@
-<!-- ============================================================ -->
-<!-- NAVBAR TEMPLATE                                              -->
-<!-- ANGULAR CONCEPTS USED:                                       -->
-<!--   routerLink        — Navigate without page reload           -->
-<!--   routerLinkActive  — Add CSS class to active route link     -->
-<!--   [(ngModel)]       — Two-way data binding for search input  -->
-<!--   (submit)          — Event binding for form submission      -->
-<!--   @if               — Angular 17 control flow (conditional)  -->
-<!--   cartService.itemCount() — Reading a Signal in a template   -->
-<!-- ============================================================ -->
-
 <nav class="navbar">
   <!-- Brand / Logo -->
   <div class="nav-brand">
@@ -30,12 +19,6 @@
 
     <!-- Navigation Links -->
     <div class="nav-links">
-      <!--
-        routerLink: Where to navigate
-        routerLinkActive: CSS class added when this route is active
-        [routerLinkActiveOptions]="{exact: true}": Only match exact URL
-          (needed for '/' so it doesn't match '/products' too)
-      -->
       <a routerLink="/"
          routerLinkActive="active"
          [routerLinkActiveOptions]="{ exact: true }"
@@ -47,15 +30,18 @@
          (click)="mobileMenuOpen = false">
         Products
       </a>
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin"
+           routerLinkActive="active"
+           class="admin-link"
+           (click)="mobileMenuOpen = false">
+          Admin
+        </a>
+      }
     </div>
 
     <!-- Search Bar -->
     <div class="nav-search">
-      <!--
-        (submit) prevents default form submission (no page reload)
-        and calls our onSearch() method instead.
-        [(ngModel)] keeps searchTerm in sync with the input value.
-      -->
       <form (submit)="onSearch()" class="search-form">
         <input
           type="text"
@@ -71,22 +57,22 @@
       </form>
     </div>
 
-    <!-- Cart Link with Badge -->
+    <!-- Cart + Auth Links -->
     <div class="nav-actions">
       <a routerLink="/cart"
          routerLinkActive="active"
          class="cart-link"
          (click)="mobileMenuOpen = false">
         🛒 Cart
-        <!--
-          @if — Angular 17's new control flow syntax.
-          Only shows the badge when there are items in the cart.
-          cartService.itemCount() reads the computed signal.
-        -->
         @if (cartService.itemCount() > 0) {
           <span class="cart-badge">{{ cartService.itemCount() }}</span>
         }
       </a>
+      @if (authService.isLoggedIn()) {
+        <button class="auth-btn logout-btn" (click)="logout()">Logout</button>
+      } @else {
+        <a routerLink="/login" routerLinkActive="active" class="auth-btn" (click)="mobileMenuOpen = false">Login</a>
+      }
     </div>
   </div>
 </nav>
