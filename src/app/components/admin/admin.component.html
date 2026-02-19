@@ -1,1 +1,28 @@
-<p>admin works!</p>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="sidebar-header">
+      <h2>Admin Panel</h2>
+      <span class="admin-badge">{{ authService.currentUser()?.email }}</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a routerLink="/admin" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <span class="nav-icon">📊</span> Dashboard
+      </a>
+      <a routerLink="/admin/products" routerLinkActive="active">
+        <span class="nav-icon">📦</span> Products
+      </a>
+      <a routerLink="/admin/orders" routerLinkActive="active">
+        <span class="nav-icon">🧾</span> Orders
+      </a>
+      <a routerLink="/admin/users" routerLinkActive="active">
+        <span class="nav-icon">👥</span> Users
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <a routerLink="/" class="back-link">← Back to Store</a>
+    </div>
+  </aside>
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

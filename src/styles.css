@@ -167,7 +167,8 @@ app-home,
 app-product-list,
 app-product-detail,
 app-cart,
-app-checkout {
+app-checkout,
+app-admin {
   display: block;
   animation: fadeIn 0.3s ease-out;
 }

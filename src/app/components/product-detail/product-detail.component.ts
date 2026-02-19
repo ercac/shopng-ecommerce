@@ -52,11 +52,12 @@ export class ProductDetailComponent implements OnInit {
       const id = Number(idParam);  // Convert string to number
 
       // Fetch the product from our service
-      this.productService.getProductById(id).subscribe(product => {
-        if (product) {
+      this.productService.getProductById(id).subscribe({
+        next: (product) => {
           this.product = product;
           this.loadRelatedProducts(product);
-        } else {
+        },
+        error: () => {
           // Product not found — redirect to products page
           this.router.navigate(['/products']);
         }

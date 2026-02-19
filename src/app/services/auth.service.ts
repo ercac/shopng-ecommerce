@@ -1,54 +1,20 @@
-// ============================================================
-// AUTH SERVICE — Manages authentication state & API calls
-// ============================================================
-// ANGULAR CONCEPTS:
-//
-// 1. Signals for reactive state — We store the current user
-//    in a signal so the UI (navbar, guards) automatically
-//    reacts when the user logs in or out.
-//
-// 2. computed() — Derived values from signals. `isAdmin` is
-//    computed from `currentUser`, so it updates automatically.
-//
-// 3. HttpClient — Angular's built-in HTTP client for making
-//    API requests. Returns Observables, but we convert to
-//    Promises here using firstValueFrom() for simpler async/await.
-//
-// 4. localStorage — Browser storage that persists across page
-//    reloads. We store the JWT token here so the user stays
-//    logged in even after refreshing the page.
-// ============================================================
-
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { User, AuthResponse } from '../product.model';
 import { environment } from '../environments/environment';
+import { LOCAL_ACCOUNTS } from '../credentials.local';
 
 @Injectable({
-  // providedIn: 'root' makes this a singleton — one instance
-  // shared across the entire app. Perfect for auth state.
   providedIn: 'root'
 })
 export class AuthService {
-  // ── API base URL ──────────────────────────────────────────
   private apiUrl = environment.apiUrl;
 
-  // ── Reactive State with Signals ───────────────────────────
-  // signal<T | null> creates a reactive container.
-  // When we call currentUser.set(user), any component reading
-  // currentUser() in its template will automatically re-render.
   private currentUserSignal = signal<User | null>(null);
-
-  // Public read-only access to the current user signal
   readonly currentUser = this.currentUserSignal.asReadonly();
-
-  // computed() derives a value from other signals.
-  // isLoggedIn automatically becomes true when currentUser is set.
   readonly isLoggedIn = computed(() => this.currentUserSignal() !== null);
-
-  // isAdmin checks both that we're logged in AND the user has admin role
   readonly isAdmin = computed(() => {
     const user = this.currentUserSignal();
     return user !== null && user.role === 'admin';
@@ -58,17 +24,27 @@ export class AuthService {
     private http: HttpClient,
     private router: Router
   ) {
-    // On app startup, check if there's a saved token.
-    // This restores the user's session after a page refresh.
     this.loadUserFromToken();
   }
 
-  // ── Login ─────────────────────────────────────────────────
-  // Sends email/password to the API, stores the JWT token,
-  // and updates the currentUser signal.
+  // ── Login ───────────────────────────────────────────────────
+  // Checks local credentials (from credentials.local.ts) first.
+  // If no match, falls through to the real backend API.
   async login(email: string, password: string): Promise<User> {
-    // firstValueFrom converts an Observable to a Promise.
-    // This lets us use async/await instead of .subscribe()
+    // Check local accounts first (git-ignored file)
+    const fakeMatch = LOCAL_ACCOUNTS.find(
+      a => a.email === email && a.password === password
+    );
+
+    if (fakeMatch) {
+      // Store a dev token that encodes which fake account it is.
+      // Format: "dev-fake-<email>" so loadUserFromToken can restore it.
+      localStorage.setItem('token', `dev-fake-${fakeMatch.email}`);
+      this.currentUserSignal.set(fakeMatch.user);
+      return fakeMatch.user;
+    }
+
+    // No fake match — hit the real backend
     const response = await firstValueFrom(
       this.http.post<AuthResponse>(`${this.apiUrl}/auth/login`, {
         email,
@@ -76,18 +52,12 @@ export class AuthService {
       })
     );
 
-    // Store the JWT token in localStorage for persistence
     localStorage.setItem('token', response.token);
-
-    // Update the signal — this triggers re-renders everywhere
-    // that reads currentUser(), isLoggedIn(), or isAdmin()
     this.currentUserSignal.set(response.user);
-
     return response.user;
   }
 
-  // ── Register ──────────────────────────────────────────────
-  // Creates a new user account, stores the token, and logs in.
+  // ── Register ────────────────────────────────────────────────
   async register(data: {
     email: string;
     password: string;
@@ -100,41 +70,49 @@ export class AuthService {
 
     localStorage.setItem('token', response.token);
     this.currentUserSignal.set(response.user);
-
     return response.user;
   }
 
-  // ── Logout ────────────────────────────────────────────────
-  // Clears the token and resets the user signal.
+  // ── Logout ──────────────────────────────────────────────────
   logout(): void {
     localStorage.removeItem('token');
     this.currentUserSignal.set(null);
     this.router.navigate(['/']);
   }
 
-  // ── Get Token ─────────────────────────────────────────────
-  // Used by the auth interceptor to attach the token to requests.
+  // ── Get Token ───────────────────────────────────────────────
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  // ── Load User from Token ──────────────────────────────────
-  // Called on app startup. If a token exists, we call GET /auth/me
-  // to get the user's info. If the token is expired or invalid,
-  // we clear it silently.
+  // ── Load User from Token ────────────────────────────────────
+  // On app startup, restores the session. If the token is a
+  // dev-fake token, restores the fake user without an API call.
+  // Otherwise hits GET /auth/me to validate the real JWT.
   private async loadUserFromToken(): Promise<void> {
     const token = this.getToken();
     if (!token) return;
 
+    // Check if it's a dev-fake token
+    if (token.startsWith('dev-fake-')) {
+      const email = token.replace('dev-fake-', '');
+      const fakeMatch = LOCAL_ACCOUNTS.find(a => a.email === email);
+      if (fakeMatch) {
+        this.currentUserSignal.set(fakeMatch.user);
+        return;
+      }
+      // Invalid fake token — clean up
+      localStorage.removeItem('token');
+      return;
+    }
+
+    // Real token — validate with backend
     try {
-      // Call the /auth/me endpoint to validate the token
-      // and get the current user's info
       const user = await firstValueFrom(
         this.http.get<User>(`${this.apiUrl}/auth/me`)
       );
       this.currentUserSignal.set(user);
     } catch {
-      // Token is expired or invalid — clean up silently
       localStorage.removeItem('token');
       this.currentUserSignal.set(null);
     }
