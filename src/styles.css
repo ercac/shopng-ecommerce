@@ -171,6 +171,7 @@ app-checkout,
 app-login,
 app-register,
 app-settings,
+app-order-history,
 app-admin {
   display: block;
   animation: fadeIn 0.3s ease-out;

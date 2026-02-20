@@ -109,6 +109,14 @@ export class OrderService {
     ));
   }
 
+  /** Get orders for a specific user (storefront order history) */
+  getOrdersByUserId(userId: number): Observable<Order[]> {
+    const userOrders = this.orders
+      .filter(o => o.user_id === userId)
+      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+    return of(userOrders.map(o => ({ ...o, items: o.items?.map(i => ({ ...i })) })));
+  }
+
   /** Get a single order by ID */
   getOrderById(id: number): Observable<Order> {
     const order = this.orders.find(o => o.id === id);

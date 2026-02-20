@@ -152,6 +152,24 @@
   font-weight: 600 !important;
 }
 
+/* ── Orders Link ────────────────────────────────────────── */
+
+.orders-link {
+  text-decoration: none;
+  color: var(--text-muted, #6c757d);
+  font-weight: 500;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.orders-link:hover,
+.orders-link.active {
+  color: var(--primary, #2B3D5A);
+  background: rgba(0, 0, 0, 0.04);
+}
+
 /* ── Settings Link ──────────────────────────────────────── */
 
 .settings-link {

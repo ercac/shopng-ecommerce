@@ -12,7 +12,7 @@
 | 1 | Feb 2025 | Project scaffolding, product browsing, cart system, checkout flow |
 | 2 | Feb 2025 | Admin panel (product CRUD, disable/enable), fake login system, local credentials |
 | 3 | Feb 2025 | Register component with form validation, admin dashboard with stats/charts |
-| 4 | | |
+| 4 | Feb 2025 | User settings page, checkout auto-fill, admin orders (search, status workflow, cost breakdown), admin users (account management, privacy controls), order history storefront page |
 | 5 | | |
 | 6 | | |
 | 7 | | |
@@ -78,6 +78,9 @@ src/app/
 |   |-- auth.service.ts                Login, logout, session restore, role checks
 |   |-- product.service.ts             In-memory CRUD, storefront filtering, admin methods
 |   |-- cart.service.ts                Cart state with signals, quantity management
+|   |-- order.service.ts               In-memory orders with 5 seeds, search, status updates
+|   |-- user.service.ts                In-memory users, search, suspend/reactivate
+|   |-- user-profile.service.ts        Profile persistence (localStorage), admin defaults
 |
 |-- guards/
 |   |-- auth.guard.ts                  Blocks unauthenticated users, redirects to /login
@@ -98,13 +101,15 @@ src/app/
     |-- cart/                          Cart items with quantity controls, order summary
     |-- checkout/                      Multi-section form with validation
     |-- login/                         Email/password form with error handling
-    |-- register/                      (Stub — not yet implemented)
+    |-- register/                      Register form with validation, password match check
+    |-- settings/                      User profile form (personal, shipping, payment)
+    |-- order-history/                 Storefront order list with expandable detail cards
     |-- admin/                         Admin layout shell with sidebar navigation
-    |-- admin-dashboard/               (Stub — statistics overview planned)
+    |-- admin-dashboard/               Stats cards (products, revenue, users, alerts), recent orders
     |-- admin-products/                Product table with search, status toggle, delete
     |-- admin-product-form/            Create/edit form with image preview, visibility toggle
-    |-- admin-orders/                  (Stub — order management planned)
-    |-- admin-users/                   (Stub — user management planned)
+    |-- admin-orders/                  Order lookup, search, status workflow, cost breakdown
+    |-- admin-users/                   User accounts, roles, suspend/reactivate, privacy controls
 
 backend/
 |-- server.js                          Express entry point, middleware stack

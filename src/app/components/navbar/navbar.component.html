@@ -69,6 +69,12 @@
         }
       </a>
       @if (authService.isLoggedIn()) {
+        <a routerLink="/orders"
+           routerLinkActive="active"
+           class="orders-link"
+           (click)="mobileMenuOpen = false">
+          Orders
+        </a>
         <a routerLink="/settings"
            routerLinkActive="active"
            class="settings-link"
