@@ -89,6 +89,20 @@ export interface AdminUser {
   totalSpent: number;
 }
 
+/** Represents a user-submitted product review */
+export interface Review {
+  id: number;
+  productId: number;
+  userId: number;
+  userName: string;             // Display name (firstName + lastName initial)
+  rating: number;               // 1-5
+  title: string;
+  comment: string;
+  createdAt: string;            // ISO date string
+  helpful: number;              // Upvote count
+  status: 'approved' | 'pending' | 'rejected';
+}
+
 /** Dashboard statistics for admin */
 export interface DashboardStats {
   totalUsers: number;

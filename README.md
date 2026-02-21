@@ -131,16 +131,21 @@ backend/
 - **Product browsing** — Grid layout with category filtering and keyword search
 - **Product detail** — Full description, star ratings, stock status, quantity selector, related products
 - **Shopping cart** — Add/remove items, adjust quantities, running total
-- **Checkout** — Validated form (personal info, shipping address, payment), order confirmation
+- **Checkout** — Validated form (personal info, shipping address, payment), auto-fills from saved profile
+- **Order history** — View past orders with status badges, expandable item/cost details
+- **User settings** — Save personal info, shipping address, and payment details for faster checkout
 - **Authentication** — Login/register with JWT, persistent sessions via localStorage
 - **Responsive design** — Mobile hamburger menu, fluid grid, responsive tables
 
 ### Admin Panel
 
+- **Dashboard** — Stats cards (products, revenue, users, low stock alerts), recent orders, category breakdown, quick actions
 - **Product management** — Create, edit, delete products with full form validation
 - **Disable/enable** — Toggle product visibility on the storefront without deleting
-- **Search & filter** — Find products by name or category in the admin table
-- **Image preview** — See product image while editing the URL
+- **Order management** — Search/filter orders, expandable detail view with line items, cost breakdown (subtotal + 8.25% tax + $4.99 fees), status workflow (pending → processing → shipped → delivered)
+- **User management** — View registered accounts, search by name/email, role badges, order stats, shipping address access (no payment data), suspend/reactivate accounts
+- **Search & filter** — Find products, orders, or users across all admin tables
+- **Privacy controls** — Payment information hidden from admin panel, self-lock protection
 - **Role protection** — Admin routes guarded by `authGuard` + `adminGuard`; admin nav link hidden from regular users
 
 ---
@@ -298,11 +303,42 @@ interface User {
 
 interface Order {
   id: number;
+  orderNumber: string;     // "ORD-10001" format
   user_id: number;
   status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
-  total: number;
+  subtotal: number;        // Sum of (price x qty)
+  tax: number;             // 8.25% of subtotal
+  fees: number;            // $4.99 flat shipping/processing
+  total: number;           // subtotal + tax + fees
   shipping_address: string;
   items?: OrderItem[];
+}
+
+interface AdminUser {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  role: 'user' | 'admin';
+  status: 'active' | 'suspended';
+  registeredAt: string;
+  orderCount: number;
+  totalSpent: number;
+}
+
+interface UserProfile {
+  userId: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  shippingAddress: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingZip: string;
+  cardName: string;
+  cardNumber: string;
+  cardExpiry: string;
+  cardCvv: string;
 }
 ```
 
@@ -344,9 +380,11 @@ CSS custom properties define the visual language globally in `src/styles.css`:
 
 - [x] Register component (UI + form validation)
 - [x] Admin dashboard with statistics cards and charts
-- [ ] Admin orders management (table, status updates)
-- [ ] Admin users management (role changes, delete)
-- [ ] User profile page and order history
+- [x] Admin orders management (search, status workflow, cost breakdown)
+- [x] Admin users management (accounts, roles, suspend/reactivate, privacy)
+- [x] User settings page (profile, shipping, payment preferences)
+- [x] Checkout auto-fill from saved profile
+- [x] Order history (storefront view for logged-in users)
 - [ ] Product reviews and ratings
 - [ ] Real payment integration (Stripe)
 - [ ] Image upload for products
@@ -376,4 +414,4 @@ node server.js
 
 ---
 
-*Last updated: February 2025*
+*Last updated: Week 4, February 2025*
