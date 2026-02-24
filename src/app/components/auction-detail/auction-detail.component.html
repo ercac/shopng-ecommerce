@@ -74,9 +74,6 @@
           @if (bidError) {
             <div class="alert alert-error">{{ bidError }}</div>
           }
-          @if (bidSuccess) {
-            <div class="alert alert-success">Bid placed successfully!</div>
-          }
         </div>
       } @else if (!authService.isLoggedIn()) {
         <a routerLink="/login" class="btn-login-bid">Log in to place a bid</a>

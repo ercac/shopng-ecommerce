@@ -1,0 +1,15 @@
+<!-- ============================================================ -->
+<!-- NOTIFICATION CONTAINER — Fixed overlay for toast messages    -->
+<!-- Reads notificationService.active() signal. Each toast has    -->
+<!-- an icon, message text, and a close button.                   -->
+<!-- ============================================================ -->
+
+<div class="notification-container">
+  @for (notification of notificationService.active(); track notification.id) {
+    <div class="toast" [class]="'toast toast-' + notification.type">
+      <span class="toast-icon">{{ getIcon(notification.type) }}</span>
+      <span class="toast-message">{{ notification.message }}</span>
+      <button class="toast-close" (click)="dismiss(notification.id)" aria-label="Dismiss">&times;</button>
+    </div>
+  }
+</div>

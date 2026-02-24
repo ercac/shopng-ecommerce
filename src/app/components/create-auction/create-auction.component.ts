@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuctionService } from '../../services/auction.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-create-auction',
@@ -24,7 +25,6 @@ export class CreateAuctionComponent {
 
   saving = false;
   error = '';
-  successMessage = '';
 
   auction = {
     title: '',
@@ -49,7 +49,8 @@ export class CreateAuctionComponent {
   constructor(
     private auctionService: AuctionService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notify: NotificationService
   ) {}
 
   onSubmit(): void {
@@ -93,7 +94,7 @@ export class CreateAuctionComponent {
       endsAt: endsAt.toISOString()
     }).subscribe({
       next: () => {
-        this.successMessage = 'Auction created! Redirecting...';
+        this.notify.success('Auction created successfully!');
         setTimeout(() => this.router.navigate(['/auctions']), 1500);
       },
       error: (err) => {

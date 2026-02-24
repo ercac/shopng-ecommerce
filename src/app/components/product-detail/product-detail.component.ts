@@ -30,6 +30,7 @@ import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { ReviewService } from '../../services/review.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { Product, Review } from '../../product.model';
 import { ProductCardComponent } from '../product-card/product-card.component';
 
@@ -52,7 +53,6 @@ export class ProductDetailComponent implements OnInit {
   averageRating = 0;
   showReviewForm = false;
   hasReviewed = false;
-  reviewSubmitted = false;
 
   // Review form fields
   newRating = 5;
@@ -65,7 +65,8 @@ export class ProductDetailComponent implements OnInit {
     private productService: ProductService,
     private cartService: CartService,
     private reviewService: ReviewService,
-    public authService: AuthService
+    public authService: AuthService,
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -151,6 +152,7 @@ export class ProductDetailComponent implements OnInit {
   addToCart(): void {
     if (this.product) {
       this.cartService.addToCart(this.product, this.quantity);
+      this.notify.success(`${this.product.name} added to cart!`);
       this.quantity = 1;  // Reset quantity after adding
     }
   }
@@ -158,6 +160,7 @@ export class ProductDetailComponent implements OnInit {
   /** Handle "Add to Cart" from related product cards */
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product);
+    this.notify.success(`${product.name} added to cart!`);
   }
 
   // ── Review Methods ────────────────────────────────────────
@@ -183,16 +186,13 @@ export class ProductDetailComponent implements OnInit {
       // Reload reviews to update the list + average
       this.loadReviews(this.product!.id);
       this.showReviewForm = false;
-      this.reviewSubmitted = true;
       this.hasReviewed = true;
+      this.notify.success('Review submitted! Thanks for your feedback.');
 
       // Reset form
       this.newRating = 5;
       this.newTitle = '';
       this.newComment = '';
-
-      // Hide success message after 4 seconds
-      setTimeout(() => { this.reviewSubmitted = false; }, 4000);
     });
   }
 

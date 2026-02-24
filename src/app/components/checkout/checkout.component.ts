@@ -31,6 +31,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { CurrencyPipe } from '@angular/common';
 import { CartService } from '../../services/cart.service';
 import { UserProfileService } from '../../services/user-profile.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-checkout',
@@ -50,7 +51,8 @@ export class CheckoutComponent implements OnInit {
     private fb: FormBuilder,    // FormBuilder for easier form creation
     public cartService: CartService,
     private router: Router,
-    private userProfileService: UserProfileService
+    private userProfileService: UserProfileService,
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -152,6 +154,7 @@ export class CheckoutComponent implements OnInit {
 
       // Show success message
       this.orderPlaced = true;
+      this.notify.success('Order placed successfully!');
 
       // Clear the cart
       this.cartService.clearCart();

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuctionService } from '../../services/auction.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { Auction, Bid } from '../../product.model';
 
 @Component({
@@ -26,7 +27,6 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
   bids: Bid[] = [];
   bidAmount: number = 0;
   bidError = '';
-  bidSuccess = false;
   timeRemaining = '';
   private timerInterval: any;
 
@@ -34,7 +34,8 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private router: Router,
     private auctionService: AuctionService,
-    public authService: AuthService
+    public authService: AuthService,
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -138,7 +139,6 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
     if (!user) return;
 
     this.bidError = '';
-    this.bidSuccess = false;
 
     const displayName = `${user.firstName} ${user.lastName.charAt(0)}.`;
 
@@ -149,12 +149,12 @@ export class AuctionDetailComponent implements OnInit, OnDestroy {
       this.bidAmount
     ).subscribe({
       next: () => {
-        this.bidSuccess = true;
+        this.notify.success('Bid placed successfully!');
         this.loadAuction(this.auction!.id);
-        setTimeout(() => { this.bidSuccess = false; }, 4000);
       },
       error: (err) => {
         this.bidError = err.error || 'Failed to place bid';
+        this.notify.error(this.bidError);
       }
     });
   }

@@ -7,6 +7,9 @@
 <!-- Persistent navigation bar -->
 <app-navbar></app-navbar>
 
+<!-- Global toast notifications (persists across route changes) -->
+<app-notification-container />
+
 <!-- Dynamic page content area -->
 <main class="main-content" [class.admin-active]="isAdminRoute">
   <router-outlet></router-outlet>

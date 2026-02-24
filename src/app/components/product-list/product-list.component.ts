@@ -24,6 +24,7 @@ import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
+import { NotificationService } from '../../services/notification.service';
 import { Product } from '../../product.model';
 import { ProductCardComponent } from '../product-card/product-card.component';
 
@@ -46,6 +47,7 @@ export class ProductListComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
+    private notify: NotificationService,
     private route: ActivatedRoute        // Gives access to URL info
   ) {}
 
@@ -131,5 +133,6 @@ export class ProductListComponent implements OnInit {
    */
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product);
+    this.notify.success(`${product.name} added to cart!`);
   }
 }
