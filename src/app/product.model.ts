@@ -119,6 +119,35 @@ export interface ProductResponse {
   totalPages: number;
 }
 
+/** Represents an auction listing created by a user */
+export interface Auction {
+  id: number;
+  sellerId: number;             // User.id of the person who created the auction
+  sellerName: string;           // Display name: "FirstName L."
+  title: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+  startingPrice: number;        // Minimum opening bid
+  currentPrice: number;         // Highest bid so far (equals startingPrice if no bids)
+  bidCount: number;             // Number of bids placed
+  status: 'active' | 'ended' | 'sold' | 'cancelled';
+  createdAt: string;            // ISO date string
+  endsAt: string;               // ISO date string — auction deadline
+  winnerId?: number;            // User.id of highest bidder when ended/sold
+  winnerName?: string;          // Display name of winner
+}
+
+/** Represents a single bid on an auction */
+export interface Bid {
+  id: number;
+  auctionId: number;
+  bidderId: number;             // User.id
+  bidderName: string;           // Display name: "FirstName L."
+  amount: number;
+  createdAt: string;            // ISO date string
+}
+
 /** User profile with saved shipping and payment preferences */
 export interface UserProfile {
   userId: number;

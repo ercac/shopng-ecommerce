@@ -30,6 +30,37 @@
   </div>
 </section>
 
+<!-- ── Hot Auctions ─────────────────────────────────────────── -->
+@if (hotAuctions.length > 0) {
+  <section class="auctions-section">
+    <div class="section-header">
+      <h2>Hot Auctions</h2>
+      <p>Bid on unique items from the community</p>
+    </div>
+    <div class="auction-preview-grid">
+      @for (auction of hotAuctions; track auction.id) {
+        <a [routerLink]="['/auction', auction.id]" class="auction-preview-card">
+          <div class="auction-preview-image">
+            <img [src]="auction.imageUrl" [alt]="auction.title" />
+            <span class="auction-preview-category">{{ auction.category }}</span>
+          </div>
+          <div class="auction-preview-body">
+            <h3>{{ auction.title }}</h3>
+            <span class="auction-preview-seller">by {{ auction.sellerName }}</span>
+            <div class="auction-preview-footer">
+              <span class="auction-preview-price">{{ auction.currentPrice | currency:'USD' }}</span>
+              <span class="auction-preview-bids">{{ auction.bidCount }} bids</span>
+            </div>
+          </div>
+        </a>
+      }
+    </div>
+    <div class="section-cta">
+      <a routerLink="/auctions" class="btn-outline">View All Auctions</a>
+    </div>
+  </section>
+}
+
 <!-- ── Shop by Category ──────────────────────────────────────── -->
 <section class="categories-section">
   <div class="section-header">

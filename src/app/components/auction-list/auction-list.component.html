@@ -1,0 +1,90 @@
+<!-- ============================================================ -->
+<!-- AUCTION LIST — Browse active community auctions              -->
+<!-- ============================================================ -->
+
+<div class="auction-page">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-text">
+      <h1>Auctions</h1>
+      <p class="subtitle">Bid on unique items from the community</p>
+    </div>
+    @if (authService.isLoggedIn()) {
+      <a routerLink="/auctions/create" class="btn-create">+ Create Auction</a>
+    }
+  </div>
+
+  <div class="auction-layout">
+    <!-- ── Category Sidebar ──────────────────────────────────── -->
+    <aside class="category-sidebar">
+      <h3>Categories</h3>
+      <ul class="category-list">
+        <li>
+          <button [class.active]="selectedCategory === ''"
+                  (click)="filterByCategory('')">
+            All Auctions
+          </button>
+        </li>
+        @for (cat of categories; track cat) {
+          <li>
+            <button [class.active]="selectedCategory === cat"
+                    (click)="filterByCategory(cat)">
+              {{ cat }}
+            </button>
+          </li>
+        }
+      </ul>
+    </aside>
+
+    <!-- ── Main Content ──────────────────────────────────────── -->
+    <div class="auction-main">
+      <!-- Search Bar -->
+      <div class="search-toolbar">
+        <input type="text"
+               [(ngModel)]="searchTerm"
+               (input)="onSearch()"
+               placeholder="Search auctions..."
+               class="search-input" />
+        <span class="results-count">{{ filteredAuctions.length }} auction{{ filteredAuctions.length !== 1 ? 's' : '' }}</span>
+      </div>
+
+      <!-- Auction Grid -->
+      @if (filteredAuctions.length > 0) {
+        <div class="auction-grid">
+          @for (auction of filteredAuctions; track auction.id) {
+            <a [routerLink]="['/auction', auction.id]" class="auction-card">
+              <div class="card-image">
+                <img [src]="auction.imageUrl" [alt]="auction.title" />
+                <span class="card-category">{{ auction.category }}</span>
+              </div>
+              <div class="card-body">
+                <h3 class="card-title">{{ auction.title }}</h3>
+                <span class="card-seller">by {{ auction.sellerName }}</span>
+                <div class="card-price-row">
+                  <div class="price-info">
+                    <span class="price-label">Current Bid</span>
+                    <span class="price-value">{{ auction.currentPrice | currency:'USD' }}</span>
+                  </div>
+                  <span class="bid-count">{{ auction.bidCount }} bid{{ auction.bidCount !== 1 ? 's' : '' }}</span>
+                </div>
+                <div class="card-timer" [ngClass]="getTimerClass(auction.endsAt)">
+                  <span class="timer-icon">&#9202;</span>
+                  <span class="timer-text">{{ getTimeRemaining(auction.endsAt) }}</span>
+                </div>
+              </div>
+            </a>
+          }
+        </div>
+      } @else {
+        <div class="empty-state">
+          <p>No auctions found.</p>
+          @if (searchTerm || selectedCategory) {
+            <button (click)="searchTerm = ''; selectedCategory = ''; applyFilters()" class="btn-clear">
+              Clear filters
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+</div>

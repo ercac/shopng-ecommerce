@@ -1,0 +1,120 @@
+<!-- ============================================================ -->
+<!-- CREATE AUCTION — Form to list an item for auction            -->
+<!-- ============================================================ -->
+
+<div class="create-auction-page">
+  <a routerLink="/auctions" class="back-link">&larr; Back to Auctions</a>
+
+  <div class="page-header">
+    <h1>Create Auction Listing</h1>
+    <p class="subtitle">List an item for the community to bid on</p>
+  </div>
+
+  <!-- Alerts -->
+  @if (error) {
+    <div class="alert alert-error">{{ error }}</div>
+  }
+  @if (successMessage) {
+    <div class="alert alert-success">{{ successMessage }}</div>
+  }
+
+  <form (ngSubmit)="onSubmit()" class="form-card">
+    <!-- ── Listing Info ──────────────────────────────────── -->
+    <fieldset>
+      <legend>Listing Info</legend>
+
+      <div class="form-group">
+        <label for="title">Title *</label>
+        <input id="title"
+               type="text"
+               [(ngModel)]="auction.title"
+               name="title"
+               placeholder="What are you selling?"
+               maxlength="100"
+               required />
+      </div>
+
+      <div class="form-group">
+        <label for="description">Description</label>
+        <textarea id="description"
+                  [(ngModel)]="auction.description"
+                  name="description"
+                  placeholder="Describe the item — condition, features, what's included..."
+                  rows="4"
+                  maxlength="2000"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="imageUrl">Image URL</label>
+        <input id="imageUrl"
+               type="url"
+               [(ngModel)]="auction.imageUrl"
+               name="imageUrl"
+               placeholder="https://example.com/image.jpg" />
+        @if (auction.imageUrl) {
+          <div class="image-preview">
+            <img [src]="auction.imageUrl" alt="Preview" />
+          </div>
+        }
+      </div>
+    </fieldset>
+
+    <!-- ── Category ──────────────────────────────────────── -->
+    <fieldset>
+      <legend>Category</legend>
+
+      <div class="form-group">
+        <label for="category">Category *</label>
+        <select id="category"
+                [(ngModel)]="auction.category"
+                name="category"
+                required>
+          <option value="" disabled>Select a category</option>
+          @for (cat of categories; track cat) {
+            <option [value]="cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+    </fieldset>
+
+    <!-- ── Pricing & Duration ────────────────────────────── -->
+    <fieldset>
+      <legend>Pricing &amp; Duration</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startingPrice">Starting Price *</label>
+          <div class="price-input-wrapper">
+            <span class="price-prefix">$</span>
+            <input id="startingPrice"
+                   type="number"
+                   [(ngModel)]="auction.startingPrice"
+                   name="startingPrice"
+                   min="1"
+                   step="0.01"
+                   placeholder="0.00"
+                   required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="duration">Duration *</label>
+          <select id="duration"
+                  [(ngModel)]="auction.durationHours"
+                  name="duration">
+            @for (opt of durationOptions; track opt.value) {
+              <option [ngValue]="opt.value">{{ opt.label }}</option>
+            }
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <!-- ── Submit ────────────────────────────────────────── -->
+    <button type="submit"
+            [disabled]="saving"
+            class="btn-submit">
+      {{ saving ? 'Creating...' : 'List for Auction' }}
+    </button>
+  </form>
+</div>

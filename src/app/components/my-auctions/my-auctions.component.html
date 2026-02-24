@@ -1,0 +1,115 @@
+<!-- ============================================================ -->
+<!-- MY AUCTIONS — User's listings and bid activity               -->
+<!-- ============================================================ -->
+
+<div class="my-auctions-page">
+  <div class="page-header">
+    <h1>My Auctions</h1>
+    <a routerLink="/auctions/create" class="btn-create">+ Create Listing</a>
+  </div>
+
+  <!-- Tab Bar -->
+  <div class="tab-bar">
+    <button [class.active]="activeTab === 'selling'"
+            (click)="activeTab = 'selling'">
+      My Listings ({{ myListings.length }})
+    </button>
+    <button [class.active]="activeTab === 'bidding'"
+            (click)="activeTab = 'bidding'">
+      My Bids ({{ myBids.length }})
+    </button>
+  </div>
+
+  @if (loading) {
+    <div class="loading-state">
+      <p>Loading your auctions...</p>
+    </div>
+  } @else if (activeTab === 'selling') {
+    <!-- ── My Listings Tab ─────────────────────────────────── -->
+    @if (myListings.length === 0) {
+      <div class="empty-state">
+        <p>You haven't listed any auctions yet.</p>
+        <a routerLink="/auctions/create" class="btn-outline">Create Your First Listing</a>
+      </div>
+    } @else {
+      <div class="auction-cards">
+        @for (auction of myListings; track auction.id) {
+          <div class="auction-card">
+            <a [routerLink]="['/auction', auction.id]" class="card-link">
+              <img [src]="auction.imageUrl" [alt]="auction.title" class="card-thumb" />
+            </a>
+            <div class="card-body">
+              <div class="card-top">
+                <a [routerLink]="['/auction', auction.id]" class="card-title">{{ auction.title }}</a>
+                <span class="status-badge" [ngClass]="getStatusClass(auction.status)">
+                  {{ auction.status }}
+                </span>
+              </div>
+              <div class="card-meta">
+                <span class="card-price">{{ auction.currentPrice | currency:'USD' }}</span>
+                <span class="card-bids">{{ auction.bidCount }} bid{{ auction.bidCount !== 1 ? 's' : '' }}</span>
+                @if (auction.status === 'active') {
+                  <span class="card-timer">{{ getTimeRemaining(auction.endsAt) }} left</span>
+                }
+              </div>
+              <div class="card-bottom">
+                <span class="card-date">Listed {{ formatDate(auction.createdAt) }}</span>
+                @if (auction.status === 'active') {
+                  <button (click)="cancelAuction(auction.id)" class="btn-cancel">Cancel</button>
+                }
+                @if (auction.winnerName) {
+                  <span class="winner-badge">Won by {{ auction.winnerName }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  } @else {
+    <!-- ── My Bids Tab ─────────────────────────────────────── -->
+    @if (myBids.length === 0) {
+      <div class="empty-state">
+        <p>You haven't bid on any auctions yet.</p>
+        <a routerLink="/auctions" class="btn-outline">Browse Auctions</a>
+      </div>
+    } @else {
+      <div class="auction-cards">
+        @for (auction of myBids; track auction.id) {
+          <div class="auction-card">
+            <a [routerLink]="['/auction', auction.id]" class="card-link">
+              <img [src]="auction.imageUrl" [alt]="auction.title" class="card-thumb" />
+            </a>
+            <div class="card-body">
+              <div class="card-top">
+                <a [routerLink]="['/auction', auction.id]" class="card-title">{{ auction.title }}</a>
+                @if (auction.status === 'active') {
+                  @if (isWinning(auction)) {
+                    <span class="bid-status winning">Winning</span>
+                  } @else {
+                    <span class="bid-status outbid">Outbid</span>
+                  }
+                } @else {
+                  <span class="status-badge" [ngClass]="getStatusClass(auction.status)">
+                    {{ auction.status }}
+                  </span>
+                }
+              </div>
+              <div class="card-meta">
+                <span class="card-price">{{ auction.currentPrice | currency:'USD' }}</span>
+                <span class="card-seller">by {{ auction.sellerName }}</span>
+                @if (auction.status === 'active') {
+                  <span class="card-timer">{{ getTimeRemaining(auction.endsAt) }} left</span>
+                }
+              </div>
+              <div class="card-bottom">
+                <span class="card-date">{{ auction.bidCount }} bid{{ auction.bidCount !== 1 ? 's' : '' }}</span>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>
