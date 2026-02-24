@@ -18,6 +18,7 @@ import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
 import { AuctionService } from '../../services/auction.service';
+import { NotificationService } from '../../services/notification.service';
 import { Product, Auction } from '../../product.model';
 import { ProductCardComponent } from '../product-card/product-card.component';
 
@@ -37,7 +38,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private productService: ProductService,
     private cartService: CartService,
-    private auctionService: AuctionService
+    private auctionService: AuctionService,
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -62,6 +64,7 @@ export class HomeComponent implements OnInit {
   /** Handle add to cart from featured product cards */
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product);
+    this.notify.success(`${product.name} added to cart!`);
   }
 
   /**

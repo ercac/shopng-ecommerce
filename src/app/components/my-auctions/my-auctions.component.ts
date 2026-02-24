@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { AuctionService } from '../../services/auction.service';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { Auction } from '../../product.model';
 
 @Component({
@@ -30,7 +31,8 @@ export class MyAuctionsComponent implements OnInit {
   constructor(
     private auctionService: AuctionService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -59,8 +61,11 @@ export class MyAuctionsComponent implements OnInit {
         if (index !== -1) {
           this.myListings[index] = updated;
         }
+        this.notify.success('Auction cancelled.');
       },
-      error: () => {}
+      error: () => {
+        this.notify.error('Failed to cancel auction.');
+      }
     });
   }
 

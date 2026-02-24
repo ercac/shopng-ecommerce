@@ -12,14 +12,6 @@
       <p>Manage your personal info, shipping address, and payment details.</p>
     </div>
 
-    <!-- Success Banner -->
-    @if (saved) {
-      <div class="success-banner">
-        <span class="success-icon">✓</span>
-        Profile saved successfully!
-      </div>
-    }
-
     <form [formGroup]="settingsForm" (ngSubmit)="onSave()">
 
       <!-- ── Personal Information ──────────────────────────── -->

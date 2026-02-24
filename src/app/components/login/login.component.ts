@@ -8,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-login',
@@ -25,7 +26,8 @@ export class LoginComponent {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private notify: NotificationService
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -49,6 +51,8 @@ export class LoginComponent {
     try {
       const { email, password } = this.loginForm.value;
       await this.authService.login(email, password);
+
+      this.notify.success('Welcome back!');
 
       // Redirect to wherever the user was trying to go, or home
       const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';

@@ -148,6 +148,14 @@ export interface Bid {
   createdAt: string;            // ISO date string
 }
 
+/** Represents a toast notification displayed to the user */
+export interface AppNotification {
+  id: number;
+  message: string;
+  type: 'success' | 'error' | 'info' | 'warning';
+  createdAt: number;            // Timestamp (ms) for auto-dismiss scheduling
+}
+
 /** User profile with saved shipping and payment preferences */
 export interface UserProfile {
   userId: number;

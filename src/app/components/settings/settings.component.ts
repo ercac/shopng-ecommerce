@@ -24,6 +24,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserProfileService } from '../../services/user-profile.service';
+import { NotificationService } from '../../services/notification.service';
 import { UserProfile } from '../../product.model';
 
 @Component({
@@ -36,13 +37,13 @@ import { UserProfile } from '../../product.model';
 export class SettingsComponent implements OnInit {
 
   settingsForm!: FormGroup;
-  saved = false;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
     public authService: AuthService,
-    private userProfileService: UserProfileService
+    private userProfileService: UserProfileService,
+    private notify: NotificationService
   ) {}
 
   ngOnInit(): void {
@@ -108,12 +109,7 @@ export class SettingsComponent implements OnInit {
       };
 
       this.userProfileService.saveProfile(profile);
-      this.saved = true;
-
-      // Hide the success banner after 3 seconds
-      setTimeout(() => {
-        this.saved = false;
-      }, 3000);
+      this.notify.success('Settings saved!');
     }
   }
 }

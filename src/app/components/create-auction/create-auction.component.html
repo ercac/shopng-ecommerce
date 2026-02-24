@@ -10,12 +10,9 @@
     <p class="subtitle">List an item for the community to bid on</p>
   </div>
 
-  <!-- Alerts -->
+  <!-- Error Alert -->
   @if (error) {
     <div class="alert alert-error">{{ error }}</div>
-  }
-  @if (successMessage) {
-    <div class="alert alert-success">{{ successMessage }}</div>
   }
 
   <form (ngSubmit)="onSubmit()" class="form-card">
