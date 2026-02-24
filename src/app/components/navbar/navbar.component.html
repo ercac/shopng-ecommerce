@@ -30,6 +30,11 @@
          (click)="mobileMenuOpen = false">
         Products
       </a>
+      <a routerLink="/auctions"
+         routerLinkActive="active"
+         (click)="mobileMenuOpen = false">
+        Auctions
+      </a>
       @if (authService.isAdmin()) {
         <a routerLink="/admin"
            routerLinkActive="active"
@@ -69,6 +74,12 @@
         }
       </a>
       @if (authService.isLoggedIn()) {
+        <a routerLink="/my-auctions"
+           routerLinkActive="active"
+           class="orders-link"
+           (click)="mobileMenuOpen = false">
+          My Auctions
+        </a>
         <a routerLink="/orders"
            routerLinkActive="active"
            class="orders-link"

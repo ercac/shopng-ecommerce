@@ -1,0 +1,158 @@
+<!-- ============================================================ -->
+<!-- ADMIN AUCTIONS — Manage all community auctions               -->
+<!-- ============================================================ -->
+
+<div class="admin-auctions">
+  <div class="page-header">
+    <h1>Auction Management</h1>
+    <p class="subtitle">Monitor and manage community auctions</p>
+  </div>
+
+  <!-- ── Quick Stats ───────────────────────────────────────── -->
+  <div class="stats-row">
+    <div class="mini-stat">
+      <span class="mini-stat-value">{{ totalAuctions }}</span>
+      <span class="mini-stat-label">Total Auctions</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat-value active-text">{{ activeCount }}</span>
+      <span class="mini-stat-label">Active</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat-value">{{ totalBids }}</span>
+      <span class="mini-stat-label">Total Bids</span>
+    </div>
+    <div class="mini-stat">
+      <span class="mini-stat-value sold-text">{{ soldCount }}</span>
+      <span class="mini-stat-label">Sold</span>
+    </div>
+  </div>
+
+  <!-- ── Toolbar ───────────────────────────────────────────── -->
+  <div class="toolbar">
+    <input type="text"
+           [(ngModel)]="searchTerm"
+           (input)="applyFilter()"
+           placeholder="Search by title, seller, category..."
+           class="toolbar-search" />
+    <select [(ngModel)]="statusFilter" (change)="applyFilter()" class="toolbar-select">
+      <option value="all">All Statuses</option>
+      <option value="active">Active</option>
+      <option value="sold">Sold</option>
+      <option value="ended">Ended</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+  </div>
+
+  <!-- ── Auctions Table ────────────────────────────────────── -->
+  @if (filteredAuctions.length > 0) {
+    <div class="table-wrapper">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Auction</th>
+            <th>Seller</th>
+            <th>Category</th>
+            <th>Bids</th>
+            <th>Current Price</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (auction of filteredAuctions; track auction.id) {
+            <!-- Main Row (clickable) -->
+            <tr class="clickable-row" (click)="toggleExpand(auction.id)">
+              <td class="title-cell">
+                <span class="auction-title-text">{{ auction.title }}</span>
+              </td>
+              <td>{{ auction.sellerName }}</td>
+              <td>{{ auction.category }}</td>
+              <td>{{ auction.bidCount }}</td>
+              <td class="price-cell">{{ auction.currentPrice | currency:'USD' }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(auction.status)">
+                  {{ auction.status }}
+                </span>
+              </td>
+              <td>{{ formatDateShort(auction.createdAt) }}</td>
+            </tr>
+
+            <!-- Expanded Detail Row -->
+            @if (expandedAuctionId === auction.id) {
+              <tr class="expanded-row">
+                <td colspan="7">
+                  <div class="expanded-content">
+                    <div class="expanded-grid">
+                      <!-- Auction Image -->
+                      <div class="expanded-image">
+                        <img [src]="auction.imageUrl" [alt]="auction.title" />
+                      </div>
+
+                      <!-- Auction Details -->
+                      <div class="expanded-details">
+                        <h3>{{ auction.title }}</h3>
+                        <p class="expanded-desc">{{ auction.description }}</p>
+
+                        <div class="detail-pairs">
+                          <div class="detail-pair">
+                            <span class="pair-label">Starting Price</span>
+                            <span class="pair-value">{{ auction.startingPrice | currency:'USD' }}</span>
+                          </div>
+                          <div class="detail-pair">
+                            <span class="pair-label">Current Price</span>
+                            <span class="pair-value accent">{{ auction.currentPrice | currency:'USD' }}</span>
+                          </div>
+                          <div class="detail-pair">
+                            <span class="pair-label">Ends At</span>
+                            <span class="pair-value">{{ formatDate(auction.endsAt) }}</span>
+                          </div>
+                          @if (auction.winnerName) {
+                            <div class="detail-pair">
+                              <span class="pair-label">Winner</span>
+                              <span class="pair-value">{{ auction.winnerName }}</span>
+                            </div>
+                          }
+                        </div>
+
+                        <!-- Bid History -->
+                        @if (expandedBids.length > 0) {
+                          <div class="bid-history">
+                            <h4>Bid History ({{ expandedBids.length }})</h4>
+                            <div class="bid-rows">
+                              @for (bid of expandedBids; track bid.id; let i = $index) {
+                                <div class="bid-row" [class.top-bid]="i === 0">
+                                  <span class="bid-bidder">{{ bid.bidderName }}</span>
+                                  <span class="bid-amount">{{ bid.amount | currency:'USD' }}</span>
+                                  <span class="bid-time">{{ formatDate(bid.createdAt) }}</span>
+                                </div>
+                              }
+                            </div>
+                          </div>
+                        }
+
+                        <!-- Actions -->
+                        @if (auction.status === 'active') {
+                          <div class="expanded-actions">
+                            <button (click)="cancelAuction(auction); $event.stopPropagation()"
+                                    class="btn-action btn-cancel">
+                              Cancel Auction
+                            </button>
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  } @else {
+    <div class="empty-state">
+      <p>No auctions match your search.</p>
+    </div>
+  }
+</div>

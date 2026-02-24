@@ -13,7 +13,7 @@
 | 2 | Feb 2025 | Admin panel (product CRUD, disable/enable), fake login system, local credentials |
 | 3 | Feb 2025 | Register component with form validation, admin dashboard with stats/charts |
 | 4 | Feb 2025 | User settings page, checkout auto-fill, admin orders (search, status workflow, cost breakdown), admin users (account management, privacy controls), order history storefront page |
-| 5 | | |
+| 5 | Feb 2025 | Product reviews and ratings (submit, upvote, average computation), auction marketplace (browse, bid, create listings, my auctions, admin moderation) |
 | 6 | | |
 | 7 | | |
 | 8 | | |
@@ -81,6 +81,8 @@ src/app/
 |   |-- order.service.ts               In-memory orders with 5 seeds, search, status updates
 |   |-- user.service.ts                In-memory users, search, suspend/reactivate
 |   |-- user-profile.service.ts        Profile persistence (localStorage), admin defaults
+|   |-- review.service.ts              Product reviews with 12 seeds, moderation workflow
+|   |-- auction.service.ts             Auction marketplace with 6 seeds, bidding, auto-expiration
 |
 |-- guards/
 |   |-- auth.guard.ts                  Blocks unauthenticated users, redirects to /login
@@ -110,6 +112,11 @@ src/app/
     |-- admin-product-form/            Create/edit form with image preview, visibility toggle
     |-- admin-orders/                  Order lookup, search, status workflow, cost breakdown
     |-- admin-users/                   User accounts, roles, suspend/reactivate, privacy controls
+    |-- admin-auctions/                Auction management, stats, expandable detail rows
+    |-- auction-list/                  Public auction browsing with search, category filter, countdowns
+    |-- auction-detail/                Auction view with bid form, bid history, live countdown
+    |-- create-auction/                Auction creation form (title, price, duration, category)
+    |-- my-auctions/                   User's listings and bid activity with tabbed view
 
 backend/
 |-- server.js                          Express entry point, middleware stack
@@ -134,6 +141,9 @@ backend/
 - **Checkout** — Validated form (personal info, shipping address, payment), auto-fills from saved profile
 - **Order history** — View past orders with status badges, expandable item/cost details
 - **User settings** — Save personal info, shipping address, and payment details for faster checkout
+- **Product reviews** — Submit ratings and reviews, upvote helpful reviews, computed average ratings
+- **Auction marketplace** — Browse active auctions, place bids with minimum increment validation, create listings with image preview, countdown timers with urgency colors
+- **My Auctions** — Tabbed view of user's listings (with cancel) and bid activity (winning/outbid indicators)
 - **Authentication** — Login/register with JWT, persistent sessions via localStorage
 - **Responsive design** — Mobile hamburger menu, fluid grid, responsive tables
 
@@ -144,7 +154,8 @@ backend/
 - **Disable/enable** — Toggle product visibility on the storefront without deleting
 - **Order management** — Search/filter orders, expandable detail view with line items, cost breakdown (subtotal + 8.25% tax + $4.99 fees), status workflow (pending → processing → shipped → delivered)
 - **User management** — View registered accounts, search by name/email, role badges, order stats, shipping address access (no payment data), suspend/reactivate accounts
-- **Search & filter** — Find products, orders, or users across all admin tables
+- **Auction management** — View all auctions with stats, search/filter, expandable detail rows with bid history, cancel auctions
+- **Search & filter** — Find products, orders, users, or auctions across all admin tables
 - **Privacy controls** — Payment information hidden from admin panel, self-lock protection
 - **Role protection** — Admin routes guarded by `authGuard` + `adminGuard`; admin nav link hidden from regular users
 
@@ -340,6 +351,46 @@ interface UserProfile {
   cardExpiry: string;
   cardCvv: string;
 }
+
+interface Review {
+  id: number;
+  productId: number;
+  userId: number;
+  userName: string;
+  rating: number;            // 1-5
+  title: string;
+  comment: string;
+  createdAt: string;
+  helpful: number;           // Upvote count
+  status: 'approved' | 'pending' | 'rejected';
+}
+
+interface Auction {
+  id: number;
+  sellerId: number;
+  sellerName: string;
+  title: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+  startingPrice: number;
+  currentPrice: number;      // Highest bid (or startingPrice if no bids)
+  bidCount: number;
+  status: 'active' | 'ended' | 'sold' | 'cancelled';
+  createdAt: string;
+  endsAt: string;            // Auction deadline
+  winnerId?: number;
+  winnerName?: string;
+}
+
+interface Bid {
+  id: number;
+  auctionId: number;
+  bidderId: number;
+  bidderName: string;
+  amount: number;
+  createdAt: string;
+}
 ```
 
 ---
@@ -385,7 +436,8 @@ CSS custom properties define the visual language globally in `src/styles.css`:
 - [x] User settings page (profile, shipping, payment preferences)
 - [x] Checkout auto-fill from saved profile
 - [x] Order history (storefront view for logged-in users)
-- [ ] Product reviews and ratings
+- [x] Product reviews and ratings
+- [x] Auction marketplace (browse, bid, create, manage)
 - [ ] Real payment integration (Stripe)
 - [ ] Image upload for products
 - [ ] Email notifications (order confirmation)
@@ -414,4 +466,4 @@ node server.js
 
 ---
 
-*Last updated: Week 4, February 2025*
+*Last updated: Week 5, February 2025*

@@ -15,6 +15,11 @@ import { AdminProductsComponent } from './components/admin-products/admin-produc
 import { AdminProductFormComponent } from './components/admin-product-form/admin-product-form.component';
 import { AdminOrdersComponent } from './components/admin-orders/admin-orders.component';
 import { AdminUsersComponent } from './components/admin-users/admin-users.component';
+import { AuctionListComponent } from './components/auction-list/auction-list.component';
+import { AuctionDetailComponent } from './components/auction-detail/auction-detail.component';
+import { CreateAuctionComponent } from './components/create-auction/create-auction.component';
+import { MyAuctionsComponent } from './components/my-auctions/my-auctions.component';
+import { AdminAuctionsComponent } from './components/admin-auctions/admin-auctions.component';
 import { authGuard } from './guards/auth.guard';
 import { adminGuard } from './guards/admin.guard';
 
@@ -30,6 +35,12 @@ export const routes: Routes = [
   { path: 'settings', component: SettingsComponent, canActivate: [authGuard] },
   { path: 'orders', component: OrderHistoryComponent, canActivate: [authGuard] },
 
+  // Auction routes
+  { path: 'auctions', component: AuctionListComponent },
+  { path: 'auctions/create', component: CreateAuctionComponent, canActivate: [authGuard] },
+  { path: 'auction/:id', component: AuctionDetailComponent },
+  { path: 'my-auctions', component: MyAuctionsComponent, canActivate: [authGuard] },
+
   // Admin routes — protected by auth + admin guards
   {
     path: 'admin',
@@ -41,7 +52,8 @@ export const routes: Routes = [
       { path: 'products/new', component: AdminProductFormComponent },
       { path: 'products/edit/:id', component: AdminProductFormComponent },
       { path: 'orders', component: AdminOrdersComponent },
-      { path: 'users', component: AdminUsersComponent }
+      { path: 'users', component: AdminUsersComponent },
+      { path: 'auctions', component: AdminAuctionsComponent }
     ]
   },
 

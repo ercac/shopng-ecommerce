@@ -4,6 +4,7 @@ import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { OrderService } from '../../services/order.service';
 import { UserService } from '../../services/user.service';
+import { AuctionService } from '../../services/auction.service';
 import { CartService } from '../../services/cart.service';
 import { Product, Order } from '../../product.model';
 
@@ -31,6 +32,10 @@ export class AdminDashboardComponent implements OnInit {
   totalUsers = 0;
   activeUsers = 0;
 
+  // Auction Stats
+  totalAuctions = 0;
+  activeAuctions = 0;
+
   // Data
   lowStockProducts: Product[] = [];
   topRatedProducts: Product[] = [];
@@ -41,6 +46,7 @@ export class AdminDashboardComponent implements OnInit {
     private productService: ProductService,
     private orderService: OrderService,
     private userService: UserService,
+    private auctionService: AuctionService,
     public cartService: CartService
   ) {}
 
@@ -100,6 +106,10 @@ export class AdminDashboardComponent implements OnInit {
     // ── User stats ────────────────────────────────────────────
     this.totalUsers = this.userService.getUserCount();
     this.activeUsers = this.userService.getActiveUserCount();
+
+    // ── Auction stats ────────────────────────────────────────
+    this.totalAuctions = this.auctionService.getAuctionCount();
+    this.activeAuctions = this.auctionService.getActiveAuctionCount();
   }
 
   getCategoryEmoji(category: string): string {

@@ -1,7 +1,7 @@
 <!-- ============================================================ -->
 <!-- PRODUCT DETAIL TEMPLATE                                      -->
-<!-- Shows full product info with quantity selector and            -->
-<!-- related products from the same category.                     -->
+<!-- Shows full product info with quantity selector,               -->
+<!-- customer reviews, and related products.                       -->
 <!-- ============================================================ -->
 
 @if (product) {
@@ -22,9 +22,9 @@
       <!-- Product name -->
       <h1 class="detail-title">{{ product.name }}</h1>
 
-      <!-- Star rating -->
+      <!-- Star rating — uses computed average when reviews exist -->
       <div class="detail-rating">
-        @for (star of getStars(product.rating); track $index) {
+        @for (star of getStars(averageRating || product.rating); track $index) {
           <span class="star"
                 [class.full]="star === 'full'"
                 [class.half]="star === 'half'"
@@ -32,7 +32,12 @@
             ★
           </span>
         }
-        <span class="rating-text">{{ product.rating }} / 5</span>
+        <span class="rating-text">
+          {{ (averageRating || product.rating).toFixed(1) }} / 5
+          @if (reviewCount > 0) {
+            <span class="review-count">({{ reviewCount }} {{ reviewCount === 1 ? 'review' : 'reviews' }})</span>
+          }
+        </span>
       </div>
 
       <!-- Price -->
@@ -79,6 +84,119 @@
       </div>
     </div>
   </div>
+
+  <!-- ── Customer Reviews ────────────────────────────────────── -->
+  <section class="reviews-section">
+    <div class="reviews-header">
+      <h2>Customer Reviews</h2>
+
+      <!-- Write-a-review button / status -->
+      @if (authService.currentUser()) {
+        @if (hasReviewed) {
+          <span class="reviewed-badge">✓ You've reviewed this product</span>
+        } @else {
+          <button (click)="toggleReviewForm()" class="btn-write-review">
+            {{ showReviewForm ? 'Cancel' : 'Write a Review' }}
+          </button>
+        }
+      } @else {
+        <a routerLink="/login" class="btn-login-review">Log in to write a review</a>
+      }
+    </div>
+
+    <!-- Review success message -->
+    @if (reviewSubmitted) {
+      <div class="review-success">
+        Your review has been submitted. Thank you!
+      </div>
+    }
+
+    <!-- ── Review Form ─────────────────────────────────────── -->
+    @if (showReviewForm) {
+      <div class="review-form">
+        <h3>Your Review</h3>
+
+        <!-- Star selector -->
+        <div class="star-selector">
+          <label>Rating:</label>
+          <div class="star-options">
+            @for (val of [1, 2, 3, 4, 5]; track val) {
+              <button type="button"
+                      class="star-btn"
+                      [class.selected]="val <= newRating"
+                      (click)="newRating = val">
+                ★
+              </button>
+            }
+            <span class="star-label">{{ newRating }} / 5</span>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div class="form-group">
+          <label for="reviewTitle">Title</label>
+          <input id="reviewTitle"
+                 type="text"
+                 [(ngModel)]="newTitle"
+                 placeholder="Summarize your experience"
+                 maxlength="100" />
+        </div>
+
+        <!-- Comment -->
+        <div class="form-group">
+          <label for="reviewComment">Review</label>
+          <textarea id="reviewComment"
+                    [(ngModel)]="newComment"
+                    placeholder="What did you like or dislike?"
+                    rows="4"
+                    maxlength="1000"></textarea>
+        </div>
+
+        <button (click)="submitReview()"
+                [disabled]="!newTitle.trim() || !newComment.trim()"
+                class="btn-submit-review">
+          Submit Review
+        </button>
+      </div>
+    }
+
+    <!-- ── Review List ─────────────────────────────────────── -->
+    @if (reviews.length > 0) {
+      <div class="review-list">
+        @for (review of reviews; track review.id) {
+          <div class="review-card">
+            <div class="review-card-header">
+              <div class="review-stars">
+                @for (star of getStars(review.rating); track $index) {
+                  <span class="star-sm"
+                        [class.full]="star === 'full'"
+                        [class.empty]="star === 'empty'">
+                    ★
+                  </span>
+                }
+              </div>
+              <span class="review-title">{{ review.title }}</span>
+            </div>
+
+            <div class="review-meta">
+              <span class="review-author">{{ review.userName }}</span>
+              <span class="review-date">{{ formatDate(review.createdAt) }}</span>
+            </div>
+
+            <p class="review-comment">{{ review.comment }}</p>
+
+            <button (click)="markHelpful(review.id)" class="btn-helpful">
+              👍 Helpful ({{ review.helpful }})
+            </button>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="reviews-empty">
+        <p>No reviews yet. Be the first to share your thoughts!</p>
+      </div>
+    }
+  </section>
 
   <!-- ── Related Products ──────────────────────────────────── -->
   @if (relatedProducts.length > 0) {

@@ -1,0 +1,338 @@
+/* ============================================================ */
+/* ADMIN AUCTIONS STYLES — Management table with expandable rows */
+/* ============================================================ */
+
+.admin-auctions {
+  padding: 2rem;
+  max-width: 1200px;
+}
+
+/* ── Page Header ─────────────────────────────────────────── */
+
+.page-header h1 {
+  margin: 0;
+  font-size: 1.75rem;
+  color: var(--text-dark, #1d3557);
+}
+
+.subtitle {
+  margin: 0.25rem 0 0;
+  color: var(--text-muted, #6c757d);
+  font-size: 0.9rem;
+}
+
+/* ── Quick Stats ─────────────────────────────────────────── */
+
+.stats-row {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  flex-wrap: wrap;
+}
+
+.mini-stat {
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+  min-width: 120px;
+  text-align: center;
+}
+
+.mini-stat-value {
+  display: block;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark, #1d3557);
+}
+
+.mini-stat-value.active-text { color: #2e7d32; }
+.mini-stat-value.sold-text { color: #1565c0; }
+
+.mini-stat-label {
+  font-size: 0.8rem;
+  color: var(--text-muted, #6c757d);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Toolbar ─────────────────────────────────────────────── */
+
+.toolbar {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.toolbar-search {
+  flex: 1;
+  min-width: 200px;
+  padding: 0.6rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: border-color 0.2s ease;
+}
+
+.toolbar-search:focus {
+  outline: none;
+  border-color: var(--primary, #2B3D5A);
+  box-shadow: 0 0 0 3px rgba(43, 61, 90, 0.1);
+}
+
+.toolbar-select {
+  padding: 0.6rem 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  background: white;
+  cursor: pointer;
+}
+
+/* ── Table ────────────────────────────────────────────────── */
+
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.data-table thead {
+  background: var(--bg, #f8f9fa);
+}
+
+.data-table th {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted, #6c757d);
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.data-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f0f0f0;
+  color: var(--text-dark, #1d3557);
+}
+
+.clickable-row {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.clickable-row:hover {
+  background: #fafafa;
+}
+
+.title-cell {
+  max-width: 220px;
+}
+
+.auction-title-text {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.price-cell {
+  font-weight: 600;
+  color: var(--accent, #e07a5f);
+}
+
+/* ── Status Badges ───────────────────────────────────────── */
+
+.status-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-active { background: #e8f5e9; color: #2e7d32; }
+.status-ended { background: #f0f0f0; color: var(--text-muted, #6c757d); }
+.status-sold { background: #e3f2fd; color: #1565c0; }
+.status-cancelled { background: #fce4ec; color: #c62828; }
+
+/* ── Expanded Row ────────────────────────────────────────── */
+
+.expanded-row td {
+  padding: 0;
+  background: #fafafa;
+}
+
+.expanded-content {
+  padding: 1.5rem;
+}
+
+.expanded-grid {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 1.5rem;
+}
+
+.expanded-image {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.expanded-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.expanded-details h3 {
+  margin: 0 0 0.5rem;
+  font-size: 1.1rem;
+  color: var(--text-dark, #1d3557);
+}
+
+.expanded-desc {
+  margin: 0 0 1rem;
+  color: var(--text-muted, #6c757d);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.detail-pairs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-pair {
+  display: flex;
+  flex-direction: column;
+}
+
+.pair-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted, #6c757d);
+}
+
+.pair-value {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text-dark, #1d3557);
+}
+
+.pair-value.accent {
+  color: var(--accent, #e07a5f);
+}
+
+/* ── Bid History (in expanded) ───────────────────────────── */
+
+.bid-history {
+  margin-bottom: 1rem;
+}
+
+.bid-history h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  color: var(--text-dark, #1d3557);
+}
+
+.bid-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.bid-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.bid-row.top-bid {
+  background: #fff9f7;
+  border: 1px solid var(--accent, #e07a5f);
+}
+
+.bid-row .bid-bidder {
+  font-weight: 500;
+  min-width: 100px;
+}
+
+.bid-row .bid-amount {
+  font-weight: 600;
+  color: var(--accent, #e07a5f);
+  min-width: 80px;
+}
+
+.bid-row .bid-time {
+  color: var(--text-muted, #6c757d);
+  font-size: 0.8rem;
+}
+
+/* ── Actions ─────────────────────────────────────────────── */
+
+.expanded-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-action {
+  padding: 0.45rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel {
+  border: 1px solid var(--danger, #e63946);
+  background: transparent;
+  color: var(--danger, #e63946);
+}
+
+.btn-cancel:hover {
+  background: var(--danger, #e63946);
+  color: white;
+}
+
+/* ── Empty State ─────────────────────────────────────────── */
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: var(--text-muted, #6c757d);
+  background: white;
+  border-radius: 12px;
+  box-shadow: var(--shadow, 0 2px 8px rgba(0, 0, 0, 0.08));
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .admin-auctions { padding: 1rem; }
+
+  .expanded-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .data-table { font-size: 0.8rem; }
+  .data-table th, .data-table td { padding: 0.5rem 0.6rem; }
+}

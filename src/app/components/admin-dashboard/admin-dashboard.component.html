@@ -33,6 +33,15 @@
       </div>
     </div>
 
+    <div class="stat-card">
+      <div class="stat-icon orange">🔨</div>
+      <div class="stat-info">
+        <span class="stat-value">{{ totalAuctions }}</span>
+        <span class="stat-label">Auctions</span>
+        <span class="stat-detail">{{ activeAuctions }} active</span>
+      </div>
+    </div>
+
     <div class="stat-card" [class.stat-warning]="lowStockCount > 0">
       <div class="stat-icon red">⚠️</div>
       <div class="stat-info">
@@ -164,6 +173,10 @@
         <a routerLink="/admin/users" class="action-btn secondary">
           <span class="action-icon">👥</span>
           <span>Manage Users</span>
+        </a>
+        <a routerLink="/admin/auctions" class="action-btn secondary">
+          <span class="action-icon">🔨</span>
+          <span>Manage Auctions</span>
         </a>
         <a routerLink="/" class="action-btn secondary">
           <span class="action-icon">🏪</span>
