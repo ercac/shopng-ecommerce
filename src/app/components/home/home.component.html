@@ -1,14 +1,50 @@
 <!-- ============================================================ -->
 <!-- HOME PAGE TEMPLATE                                           -->
-<!-- Three sections: Hero banner, Featured Products, Categories   -->
+<!-- Hero, trust badges, featured, auctions, categories, newsletter -->
 <!-- ============================================================ -->
 
 <!-- ── Hero Banner ───────────────────────────────────────────── -->
 <section class="hero">
   <div class="hero-content">
+    <span class="hero-badge">New Arrivals Weekly</span>
     <h1>Discover Amazing Products</h1>
     <p>Shop the latest trends at unbeatable prices. Quality products, fast shipping, and a seamless shopping experience.</p>
-    <a routerLink="/products" class="btn-hero">Shop Now</a>
+    <div class="hero-actions">
+      <a routerLink="/products" class="btn-hero">Shop Now</a>
+      <a routerLink="/auctions" class="btn-hero-secondary">Browse Auctions</a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Trust Badges ──────────────────────────────────────────── -->
+<section class="trust-badges">
+  <div class="trust-badge">
+    <span class="trust-icon">&#128666;</span>
+    <div class="trust-text">
+      <strong>Free Shipping</strong>
+      <span>On orders over $50</span>
+    </div>
+  </div>
+  <div class="trust-badge">
+    <span class="trust-icon">&#128274;</span>
+    <div class="trust-text">
+      <strong>Secure Checkout</strong>
+      <span>256-bit SSL encryption</span>
+    </div>
+  </div>
+  <div class="trust-badge">
+    <span class="trust-icon">&#128336;</span>
+    <div class="trust-text">
+      <strong>24/7 Support</strong>
+      <span>We're here to help</span>
+    </div>
+  </div>
+  <div class="trust-badge">
+    <span class="trust-icon">&#128260;</span>
+    <div class="trust-text">
+      <strong>Easy Returns</strong>
+      <span>30-day return policy</span>
+    </div>
   </div>
 </section>
 
@@ -77,10 +113,30 @@
       <a [routerLink]="['/products']"
          [queryParams]="{ category: cat }"
          class="category-card">
-        <span class="category-emoji">{{ getCategoryEmoji(cat) }}</span>
-        <h3>{{ cat }}</h3>
+        <span class="category-emoji-wrapper">
+          <span class="category-emoji">{{ getCategoryEmoji(cat) }}</span>
+        </span>
+        <div class="category-info">
+          <h3>{{ cat }}</h3>
+          <span class="category-subtitle">Browse collection</span>
+        </div>
         <span class="category-arrow">&rarr;</span>
       </a>
     }
+  </div>
+</section>
+
+<!-- ── Newsletter Signup ─────────────────────────────────────── -->
+<section class="newsletter-section">
+  <div class="newsletter-content">
+    <h2>Stay in the Loop</h2>
+    <p>Get the latest deals, new arrivals, and exclusive offers delivered straight to your inbox.</p>
+    <div class="newsletter-form">
+      <input type="email"
+             placeholder="Enter your email address"
+             class="newsletter-input"
+             [(ngModel)]="newsletterEmail" />
+      <button class="newsletter-btn" (click)="onSubscribe()">Subscribe</button>
+    </div>
   </div>
 </section>
