@@ -14,6 +14,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { ProductService } from '../../services/product.service';
 import { CartService } from '../../services/cart.service';
@@ -25,7 +26,7 @@ import { ProductCardComponent } from '../product-card/product-card.component';
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterLink, ProductCardComponent],
+  imports: [CommonModule, FormsModule, RouterLink, ProductCardComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.css'
 })
@@ -34,6 +35,7 @@ export class HomeComponent implements OnInit {
   featuredProducts: Product[] = [];
   categories: string[] = [];
   hotAuctions: Auction[] = [];
+  newsletterEmail = '';
 
   constructor(
     private productService: ProductService,
@@ -65,6 +67,14 @@ export class HomeComponent implements OnInit {
   onAddToCart(product: Product): void {
     this.cartService.addToCart(product);
     this.notify.success(`${product.name} added to cart!`);
+  }
+
+  /** Handle newsletter subscribe (demo — just shows a toast) */
+  onSubscribe(): void {
+    if (this.newsletterEmail.trim()) {
+      this.notify.success('Thanks for subscribing!');
+      this.newsletterEmail = '';
+    }
   }
 
   /**
